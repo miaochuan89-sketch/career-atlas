@@ -2,7 +2,7 @@
 
 Career Atlas 是范邈川为自己设计的一款本地优先 Windows 求职管理 App。它把日常计划、岗位管理、人脉跟进、作品集推进和定向简历集中在一个清晰的工作台中。
 
-**当前版本：1.4.1**
+**当前版本：1.5.0**
 
 ## 功能
 
@@ -14,15 +14,16 @@ Career Atlas 是范邈川为自己设计的一款本地优先 Windows 求职管�
 - 多版本定向简历管理
 - 简历各栏目标题可自由改名或留空，实时预览，并导出 PDF 或 Microsoft Word 可编辑的 RTF 文件
 - 多方向求职策略视图
+- 全球招聘资源导航：综合招聘、校园资源、设计/建筑、游戏/创意与中国招聘平台
 - Dashboard 数据概览
 - Foundation、Portfolio Ready、Market Ready、Interview 四阶段动态策略
-- 按 Deadline、Readiness、Opportunity Value、Career Priority、Effort 自动排序任务
+- 按 Deadline、Readiness、Opportunity Value、Career Fit、Effort 自动排序任务
 - 随阶段自动变化的 KPI 与投入权重
 - 本地持久化与 CSV 导出
 
 ## 安装（推荐）
 
-打开 `outputs/installer/Career-Atlas-Setup-1.4.1.exe`，按提示完成安装。1.4.1 支持自由编辑所有简历栏目名称，并将预览、PDF 和 Word 中的章节分隔线调整得更细致。
+打开 `outputs/installer/Career-Atlas-Setup-1.5.0.exe`，按提示完成安装。1.5.0 扩展全球招聘资源导航，并以更专业的跨市场职业策略表达替代直白的路线标签。
 
 已安装的版本也可以在应用右上角选择“检查更新”，从项目的 GitHub Release 获取正式更新。
 
