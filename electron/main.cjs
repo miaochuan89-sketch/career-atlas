@@ -5,6 +5,12 @@ const { Readable } = require('stream');
 const { pipeline } = require('stream/promises');
 const UPDATE_REPO = 'miaochuan89-sketch/career-atlas';
 
+// Prefer the stable software-rendering path on Windows Insider builds and
+// graphics drivers that can crash Chromium before the first window appears.
+app.disableHardwareAcceleration();
+app.commandLine.appendSwitch('disable-gpu-sandbox');
+if (process.env.CAREER_ATLAS_QA_PDF) app.setPath('userData', path.join(path.dirname(process.env.CAREER_ATLAS_QA_PDF), 'qa-user-data'));
+
 function newer(remote, local) {
   const a = remote.replace(/^v/, '').split('.').map(Number);
   const b = local.replace(/^v/, '').split('.').map(Number);
@@ -25,7 +31,7 @@ function createWindow() {
     minWidth: 1080,
     minHeight: 700,
     backgroundColor: '#f4f1eb',
-    titleBarStyle: 'hiddenInset',
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
@@ -33,6 +39,36 @@ function createWindow() {
     }
   });
   win.loadFile(path.join(__dirname, '..', 'src', 'index.html'));
+}
+
+const htmlEscape = value => String(value || '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+const safeFileName = value => String(value || 'Career-Atlas-Resume').replace(/[<>:"/\\|?*]/g, '-').replace(/\s+/g, ' ').trim();
+function resumeSection(title, content) {
+  if (!String(content || '').trim()) return '';
+  const groups = String(content).trim().split(/\r?\n\s*\r?\n/);
+  const lineHtml = (line, index) => {
+    const clean=line.trim();
+    if (/^[•-]/.test(clean)) return `<div class="bullet">• ${htmlEscape(clean.replace(/^[•-]\s*/,''))}</div>`;
+    const parts=clean.split(/\s+\|\s+/), left=parts.shift(), right=parts.join(' | ');
+    return `<div class="entry ${index===0?'primary':'secondary'}"><span>${htmlEscape(left)}</span>${right?`<span>${htmlEscape(right)}</span>`:''}</div>`;
+  };
+  return `<section><h2>${htmlEscape(title)}</h2>${groups.map(group=>`<div class="group">${group.split(/\r?\n/).filter(Boolean).map(lineHtml).join('')}</div>`).join('')}</section>`;
+}
+function resumeHtml(r) {
+  const contact = [r.location, r.phone, r.email, r.linkedin, r.portfolio].filter(Boolean).map(htmlEscape).join('  |  ');
+  return `<!doctype html><html><head><meta charset="utf-8"><style>@page{size:Letter;margin:.43in .5in}*{box-sizing:border-box}body{font-family:"Times New Roman",Times,serif;color:#222;margin:0;font-size:10pt;line-height:1.17}header{text-align:center;margin:0 0 9px}h1{font-size:17pt;margin:0 0 3px;line-height:1.05}header .contact{font-size:9.5pt}section{margin-top:7px}h2{font-size:11.5pt;line-height:1;text-transform:uppercase;border-bottom:.65pt solid #222;margin:0 0 3px;padding-bottom:2px}.group{margin:0 0 5px}.entry{display:flex;justify-content:space-between;gap:14px;margin:0}.entry span:last-child{text-align:right;white-space:nowrap}.entry.primary{font-weight:700}.entry.secondary{font-style:italic}.bullet{padding-left:10px;text-indent:-7px;margin:2px 0}.group .bullet:first-of-type{margin-top:3px}</style></head><body><header><h1>${htmlEscape(r.fullName || 'YOUR NAME')}</h1><div class="contact">${contact}</div></header>${r.summary?resumeSection('Profile',r.summary):''}${resumeSection('Education',r.education)}${resumeSection('Internship Experiences',r.experience)}${resumeSection('Selected Projects',r.projects)}${resumeSection('Extracurricular Activities',r.activities)}${resumeSection('Honors & Awards',r.awards)}${resumeSection('Skills',r.skills)}</body></html>`;
+}
+function rtfEscape(value) {
+  return String(value || '').replace(/[\\{}]/g, '\\$&').replace(/\r?\n/g, '\\line ').replace(/[^\x00-\x7F]/g, c => { const n=c.charCodeAt(0); return `\\u${n>32767?n-65536:n}?`; });
+}
+function resumeRtf(r) {
+  const sections = [['PROFILE',r.summary],['EDUCATION',r.education],['INTERNSHIP EXPERIENCES',r.experience],['SELECTED PROJECTS',r.projects],['EXTRACURRICULAR ACTIVITIES',r.activities],['HONORS & AWARDS',r.awards],['SKILLS',r.skills]].filter(x=>String(x[1]||'').trim());
+  const contact=[r.location,r.phone,r.email,r.linkedin,r.portfolio].filter(Boolean).join('  |  ');
+  return `{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Times New Roman;}}\\paperw12240\\paperh15840\\margl720\\margr720\\margt620\\margb620\\fs20\\sl234\\slmult1\\qc\\b\\fs34 ${rtfEscape(r.fullName||'YOUR NAME')}\\b0\\fs19\\line ${rtfEscape(contact)}\\par\\ql ${sections.map(([title,content])=>`\\sb120\\sa35\\b\\fs23 ${title}\\b0\\fs20\\brdrb\\brdrs\\brdrw10\\par\\sb35\\brdrnone ${rtfEscape(content)}\\par`).join('')}}`;
+}
+async function loadPrintableHtml(win, html) {
+  await win.loadFile(path.join(__dirname, '..', 'src', 'index.html'));
+  await win.webContents.executeJavaScript(`document.open();document.write(${JSON.stringify(html)});document.close();`);
 }
 
 ipcMain.handle('export-csv', async (_event, { filename, content }) => {
@@ -48,6 +84,21 @@ ipcMain.handle('open-external', async (_event, url) => {
   if (!/^https:\/\//i.test(url)) throw new Error('Only secure web links are allowed');
   await shell.openExternal(url);
   return true;
+});
+ipcMain.handle('export-resume-pdf', async (_event, resume) => {
+  const result = await dialog.showSaveDialog({ defaultPath: `${safeFileName(resume.versionName)}.pdf`, filters: [{ name: 'PDF', extensions: ['pdf'] }] });
+  if (result.canceled || !result.filePath) return { canceled: true };
+  const win = new BrowserWindow({ show: false, webPreferences: { sandbox: true } });
+  await loadPrintableHtml(win, resumeHtml(resume));
+  const pdf = await win.webContents.printToPDF({ pageSize: 'Letter', printBackground: true, margins: { top: 0, bottom: 0, left: 0, right: 0 } });
+  fs.writeFileSync(result.filePath, pdf); win.destroy();
+  return { canceled: false, path: result.filePath };
+});
+ipcMain.handle('export-resume-word', async (_event, resume) => {
+  const result = await dialog.showSaveDialog({ defaultPath: `${safeFileName(resume.versionName)}.rtf`, filters: [{ name: 'Microsoft Word compatible', extensions: ['rtf'] }] });
+  if (result.canceled || !result.filePath) return { canceled: true };
+  fs.writeFileSync(result.filePath, resumeRtf(resume), 'utf8');
+  return { canceled: false, path: result.filePath };
 });
 ipcMain.handle('check-update', async () => {
   try {
@@ -69,6 +120,16 @@ ipcMain.handle('install-update', async (_event, { downloadUrl, assetName }) => {
 });
 
 app.whenReady().then(() => {
+  if (process.env.CAREER_ATLAS_QA_HTML && process.env.CAREER_ATLAS_QA_PDF) {
+    const qa = new BrowserWindow({ show: false });
+    loadPrintableHtml(qa, fs.readFileSync(process.env.CAREER_ATLAS_QA_HTML, 'utf8')).then(async () => {
+      const pdf = await qa.webContents.printToPDF({ pageSize: 'Letter', printBackground: true, margins: { top: 0, bottom: 0, left: 0, right: 0 } });
+      fs.writeFileSync(process.env.CAREER_ATLAS_QA_PDF, pdf);
+      qa.destroy();
+      app.quit();
+    });
+    return;
+  }
   createWindow();
   app.on('activate', () => BrowserWindow.getAllWindows().length === 0 && createWindow());
 });

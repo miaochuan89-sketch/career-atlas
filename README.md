@@ -9,13 +9,15 @@
 - 2026-08 至 2027-06 阶段目标
 - 岗位与 Networking tracker
 - Portfolio 项目进度
+- 三套定向简历：美国 Spatial / Experiential、美国 Architecture / Visualization、中国 Game / Creative
+- 简历实时预览，并导出 PDF 或 Microsoft Word 可编辑的 RTF 文件
 - 美国 / 中国双轨策略视图
 - Dashboard 数据概览
 - 本地持久化与 CSV 导出
 
 ## 安装（推荐）
 
-打开 `outputs/installer/Career-Atlas-Setup-1.0.0.exe`，按提示选择安装目录。安装完成后可从桌面或开始菜单启动 Career Atlas。
+打开 `outputs/installer/Career-Atlas-Setup-1.3.0.exe`，按提示完成安装。1.3.0 的简历排版采用 Times New Roman、左右对齐信息行、章节横线和紧凑单页结构，并保留较新 Windows 系统的启动兼容处理。
 
 ## 从源码运行
 
