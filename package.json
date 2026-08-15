@@ -1,7 +1,7 @@
 {
   "name": "career-atlas",
-  "version": "1.4.0",
-  "description": "A local-first dual-track career planner for design students",
+  "version": "1.4.1",
+  "description": "A personal job search management app designed by Miaochuan Fan",
   "main": "electron/main.cjs",
   "author": "Career Atlas",
   "license": "MIT",
