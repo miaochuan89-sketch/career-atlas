@@ -1,0 +1,33 @@
+{
+  "name": "career-atlas",
+  "version": "1.1.0",
+  "description": "A local-first dual-track career planner for design students",
+  "main": "electron/main.cjs",
+  "author": "Career Atlas",
+  "license": "MIT",
+  "repository": "https://github.com/miaochuan89-sketch/career-atlas",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis",
+    "pack": "electron-builder --dir"
+  },
+  "devDependencies": {
+    "electron": "^37.2.6",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.careeratlas.desktop",
+    "productName": "Career Atlas",
+    "artifactName": "Career-Atlas-Setup-${version}.${ext}",
+    "directories": { "output": "outputs/installer" },
+    "files": ["electron/**/*", "src/**/*", "package.json"],
+    "win": { "target": [{ "target": "nsis", "arch": ["x64"] }] },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Career Atlas"
+    }
+  }
+}

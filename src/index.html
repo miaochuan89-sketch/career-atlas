@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Atlas</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">CA</div><div><b>Career Atlas</b><span>求职行动地图</span></div></div>
+      <nav id="nav"></nav>
+      <div class="profile-card"><span class="eyebrow">CURRENT PATH</span><strong>UCLA MSAUD · 2027</strong><p>US first · China selective</p><div class="visa-pill">F-1 · STEM track</div></div>
+    </aside>
+    <main>
+      <header><div><p class="eyebrow" id="pageEyebrow">OVERVIEW</p><h1 id="pageTitle">早上好，继续向前。</h1></div><div class="header-actions"><span id="todayLabel"></span><button class="secondary" id="updateBtn">检查更新</button><button class="icon-btn" id="resetDemo" title="恢复初始数据">↻</button><button class="primary" id="quickAdd">＋ 快速添加</button></div></header>
+      <section id="content"></section>
+    </main>
+  </div>
+  <div id="modalRoot"></div><div id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
