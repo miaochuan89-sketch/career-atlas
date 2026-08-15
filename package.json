@@ -1,6 +1,6 @@
 {
   "name": "career-atlas",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "A local-first dual-track career planner for design students",
   "main": "electron/main.cjs",
   "author": "Career Atlas",

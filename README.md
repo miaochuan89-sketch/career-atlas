@@ -13,11 +13,14 @@
 - 简历实时预览，并导出 PDF 或 Microsoft Word 可编辑的 RTF 文件
 - 美国 / 中国双轨策略视图
 - Dashboard 数据概览
+- Foundation、Portfolio Ready、Market Ready、Interview 四阶段动态策略
+- 按 Deadline、Readiness、Opportunity Value、Career Priority、Effort 自动排序任务
+- 随阶段自动变化的 KPI 与投入权重，中国秋招从 2026 年 8 月立即启动
 - 本地持久化与 CSV 导出
 
 ## 安装（推荐）
 
-打开 `outputs/installer/Career-Atlas-Setup-1.3.0.exe`，按提示完成安装。1.3.0 的简历排版采用 Times New Roman、左右对齐信息行、章节横线和紧凑单页结构，并保留较新 Windows 系统的启动兼容处理。
+打开 `outputs/installer/Career-Atlas-Setup-1.4.0.exe`，按提示完成安装。1.4.0 新增动态阶段、智能优先队列和中国秋招即时任务，同时保留新版简历与 Windows 启动兼容处理。
 
 ## 从源码运行
 
