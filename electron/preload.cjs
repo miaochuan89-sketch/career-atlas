@@ -4,6 +4,7 @@ contextBridge.exposeInMainWorld('careerAtlas', {
   openExternal: (url) => ipcRenderer.invoke('open-external', url),
   exportResumePdf: (resume) => ipcRenderer.invoke('export-resume-pdf', resume),
   exportResumeWord: (resume) => ipcRenderer.invoke('export-resume-word', resume),
+  renderResumePreview: (resume) => ipcRenderer.invoke('render-resume-preview', resume),
   checkUpdate: () => ipcRenderer.invoke('check-update'),
   installUpdate: (payload) => ipcRenderer.invoke('install-update', payload)
 });
