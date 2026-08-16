@@ -54,17 +54,29 @@ function resumeSection(title, content) {
   };
   return `<section>${String(title||'').trim()?`<h2>${htmlEscape(title)}</h2>`:''}${groups.map(group=>`<div class="group">${group.split(/\r?\n/).filter(Boolean).map(lineHtml).join('')}</div>`).join('')}</section>`;
 }
+function resumeSections(r) {
+  if (Array.isArray(r.sections)) return r.sections.filter(s => String(s.content || '').trim());
+  return [[r.summaryTitle??'PROFILE',r.summary],[r.educationTitle??'EDUCATION',r.education],[r.experienceTitle??'INTERNSHIP EXPERIENCES',r.experience],[r.projectsTitle??'SELECTED PROJECTS',r.projects],[r.activitiesTitle??'EXTRACURRICULAR ACTIVITIES',r.activities],[r.awardsTitle??'HONORS & AWARDS',r.awards],[r.skillsTitle??'SKILLS',r.skills]].filter(x=>String(x[1]||'').trim()).map(([title,content])=>({title,content}));
+}
+function resumeLayout(r) {
+  const sections=resumeSections(r), chars=sections.reduce((n,s)=>n+String(s.title||'').length+String(s.content||'').length,0), lines=sections.reduce((n,s)=>n+String(s.content||'').split(/\r?\n/).length,0), score=chars+lines*28+sections.length*70;
+  if(score<1150)return {mode:'spacious',margin:.48,font:10.5,line:1.24,section:10,group:6,name:18,heading:12};
+  if(score<2300)return {mode:'standard',margin:.43,font:10,line:1.17,section:7,group:5,name:17,heading:11.5};
+  if(score<3450)return {mode:'compact',margin:.34,font:9,line:1.09,section:4.5,group:3.5,name:16,heading:10.5};
+  return {mode:'dense',margin:.28,font:8,line:1.03,section:3,group:2.5,name:15,heading:9.5};
+}
 function resumeHtml(r) {
   const contact = [r.location, r.phone, r.email, r.linkedin, r.portfolio].filter(Boolean).map(htmlEscape).join('  |  ');
-  return `<!doctype html><html><head><meta charset="utf-8"><style>@page{size:Letter;margin:.43in .5in}*{box-sizing:border-box}body{font-family:"Times New Roman",Times,serif;color:#222;margin:0;font-size:10pt;line-height:1.17}header{text-align:center;margin:0 0 9px}h1{font-size:17pt;margin:0 0 3px;line-height:1.05}header .contact{font-size:9.5pt}section{margin-top:7px}h2{font-size:11.5pt;line-height:1;border-bottom:.35pt solid #333;margin:0 0 3px;padding-bottom:2px}.group{margin:0 0 5px}.entry{display:flex;justify-content:space-between;gap:14px;margin:0}.entry span:last-child{text-align:right;white-space:nowrap}.entry.primary{font-weight:700}.entry.secondary{font-style:italic}.bullet{padding-left:10px;text-indent:-7px;margin:2px 0}.group .bullet:first-of-type{margin-top:3px}</style></head><body><header><h1>${htmlEscape(r.fullName || 'YOUR NAME')}</h1><div class="contact">${contact}</div></header>${r.summary?resumeSection(r.summaryTitle??'PROFILE',r.summary):''}${resumeSection(r.educationTitle??'EDUCATION',r.education)}${resumeSection(r.experienceTitle??'INTERNSHIP EXPERIENCES',r.experience)}${resumeSection(r.projectsTitle??'SELECTED PROJECTS',r.projects)}${resumeSection(r.activitiesTitle??'EXTRACURRICULAR ACTIVITIES',r.activities)}${resumeSection(r.awardsTitle??'HONORS & AWARDS',r.awards)}${resumeSection(r.skillsTitle??'SKILLS',r.skills)}</body></html>`;
+  const layout=resumeLayout(r), sections=resumeSections(r);
+  return `<!doctype html><html><head><meta charset="utf-8"><style>@page{size:Letter;margin:${layout.margin}in .48in}*{box-sizing:border-box}body{font-family:"Times New Roman",Times,serif;color:#222;margin:0;font-size:${layout.font}pt;line-height:${layout.line}}header{text-align:center;margin:0 0 ${layout.section}px}h1{font-size:${layout.name}pt;margin:0 0 3px;line-height:1.05}header .contact{font-size:${Math.max(7.5,layout.font-.5)}pt}main.spacious{min-height:9.35in;display:flex;flex-direction:column;justify-content:space-around}section{margin-top:${layout.section}px;break-inside:avoid}h2{font-size:${layout.heading}pt;line-height:1;border-bottom:.35pt solid #333;margin:0 0 3px;padding-bottom:2px}.group{margin:0 0 ${layout.group}px}.entry{display:flex;justify-content:space-between;gap:14px;margin:0}.entry span:last-child{text-align:right;white-space:nowrap}.entry.primary{font-weight:700}.entry.secondary{font-style:italic}.bullet{padding-left:10px;text-indent:-7px;margin:${layout.mode==='dense'?0:1.5}px 0}</style></head><body><header><h1>${htmlEscape(r.fullName || 'YOUR NAME')}</h1><div class="contact">${contact}</div></header><main class="${layout.mode}">${sections.map(s=>resumeSection(s.title,s.content)).join('')}</main></body></html>`;
 }
 function rtfEscape(value) {
   return String(value || '').replace(/[\\{}]/g, '\\$&').replace(/\r?\n/g, '\\line ').replace(/[^\x00-\x7F]/g, c => { const n=c.charCodeAt(0); return `\\u${n>32767?n-65536:n}?`; });
 }
 function resumeRtf(r) {
-  const sections = [[r.summaryTitle??'PROFILE',r.summary],[r.educationTitle??'EDUCATION',r.education],[r.experienceTitle??'INTERNSHIP EXPERIENCES',r.experience],[r.projectsTitle??'SELECTED PROJECTS',r.projects],[r.activitiesTitle??'EXTRACURRICULAR ACTIVITIES',r.activities],[r.awardsTitle??'HONORS & AWARDS',r.awards],[r.skillsTitle??'SKILLS',r.skills]].filter(x=>String(x[1]||'').trim());
+  const sections = resumeSections(r), layout=resumeLayout(r), fs=Math.round(layout.font*2), heading=Math.round(layout.heading*2), name=Math.round(layout.name*2), margin=Math.round(layout.margin*1440), line=Math.round(layout.font*layout.line*24);
   const contact=[r.location,r.phone,r.email,r.linkedin,r.portfolio].filter(Boolean).join('  |  ');
-  return `{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Times New Roman;}}\\paperw12240\\paperh15840\\margl720\\margr720\\margt620\\margb620\\fs20\\sl234\\slmult1\\qc\\b\\fs34 ${rtfEscape(r.fullName||'YOUR NAME')}\\b0\\fs19\\line ${rtfEscape(contact)}\\par\\ql ${sections.map(([title,content])=>`${String(title||'').trim()?`\\sb120\\sa35\\b\\fs23 ${rtfEscape(title)}\\b0\\fs20\\brdrb\\brdrs\\brdrw5\\par`:''}\\sb35\\brdrnone ${rtfEscape(content)}\\par`).join('')}}`;
+  return `{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Times New Roman;}}\\paperw12240\\paperh15840\\margl691\\margr691\\margt${margin}\\margb${margin}\\fs${fs}\\sl${line}\\slmult1\\qc\\b\\fs${name} ${rtfEscape(r.fullName||'YOUR NAME')}\\b0\\fs${Math.max(15,fs-1)}\\line ${rtfEscape(contact)}\\par\\ql ${sections.map(({title,content})=>`${String(title||'').trim()?`\\sb${Math.round(layout.section*20)}\\sa30\\b\\fs${heading} ${rtfEscape(title)}\\b0\\fs${fs}\\brdrb\\brdrs\\brdrw5\\par`:''}\\sb25\\brdrnone ${rtfEscape(content)}\\par`).join('')}}`;
 }
 async function loadPrintableHtml(win, html) {
   await win.loadFile(path.join(__dirname, '..', 'src', 'index.html'));
