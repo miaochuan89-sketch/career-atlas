@@ -92,6 +92,19 @@ ipcMain.handle('export-csv', async (_event, { filename, content }) => {
   fs.writeFileSync(result.filePath, '\uFEFF' + content, 'utf8');
   return { canceled: false, path: result.filePath };
 });
+ipcMain.handle('import-task-plan', async () => {
+  const result = await dialog.showOpenDialog({ properties: ['openFile'], filters: [{ name: 'Career Atlas task plan', extensions: ['json'] }] });
+  if (result.canceled || !result.filePaths[0]) return { canceled: true };
+  const filePath = result.filePaths[0], stat = fs.statSync(filePath);
+  if (stat.size > 2 * 1024 * 1024) throw new Error('Task plan file is too large');
+  return { canceled: false, filePath, plan: JSON.parse(fs.readFileSync(filePath, 'utf8')) };
+});
+ipcMain.handle('export-task-plan', async (_event, { filename, plan }) => {
+  const result = await dialog.showSaveDialog({ defaultPath: filename, filters: [{ name: 'Career Atlas task plan', extensions: ['json'] }] });
+  if (result.canceled || !result.filePath) return { canceled: true };
+  fs.writeFileSync(result.filePath, JSON.stringify(plan, null, 2), 'utf8');
+  return { canceled: false, path: result.filePath };
+});
 ipcMain.handle('open-external', async (_event, url) => {
   if (!/^https:\/\//i.test(url)) throw new Error('Only secure web links are allowed');
   await shell.openExternal(url);

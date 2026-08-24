@@ -1,0 +1,37 @@
+{
+  "format": "career-atlas-plan",
+  "version": 1,
+  "name": "8月24日重新开始 · 高效率两小时计划",
+  "createdAt": "2026-08-24T09:00:00-07:00",
+  "startDate": "2026-08-24",
+  "endDate": "2026-08-30",
+  "tasks": [
+    {"id":"plan-2026-08-24-0","title":"补齐主简历基础信息与 Education","category":"Planning","date":"2026-08-24","opportunity":"High","readiness":"Ready","effort":65,"note":"步骤：填写姓名、电话、邮箱；核对 UCLA 与中南大学英文名称、学位、城市和日期。｜完成标准：基础信息无占位符，Education 日期统一，PDF 预览完整。"},
+    {"id":"plan-2026-08-24-1","title":"确定首个作品集主项目","category":"Portfolio","date":"2026-08-24","opportunity":"High","readiness":"Ready","effort":40,"note":"步骤：比较现有项目与目标岗位，选定一个最能证明 Spatial / 3D 能力的项目，建立素材文件夹。｜完成标准：Portfolio Tracker 已建项目，文件夹至少放入 8 张候选图。"},
+    {"id":"plan-2026-08-24-2","title":"录入 3 家目标公司","category":"Applications","date":"2026-08-24","opportunity":"Medium","readiness":"Ready","effort":15,"note":"步骤：分别寻找 Spatial、Visualization、Game/Creative 各 1 家。｜完成标准：Tracker 新增 3 条，包含公司、城市、方向和官网。"},
+
+    {"id":"plan-2026-08-25-0","title":"完成 Agence TER 三条英文 bullet","category":"Planning","date":"2026-08-25","opportunity":"High","readiness":"Partial","effort":65,"note":"步骤：列出实际参与工作；按 Action + Tool + Result 写 3 条；删除无法证明的形容词。｜完成标准：至少 3 条英文 bullet，每条不超过两行，没有方括号占位符。"},
+    {"id":"plan-2026-08-25-1","title":"筛选作品集主项目素材","category":"Portfolio","date":"2026-08-25","opportunity":"High","readiness":"Ready","effort":40,"note":"步骤：选出 1 张主视觉和 6–10 张过程图，移除重复或低清图片。｜完成标准：Final Select 文件夹完成并按叙事顺序编号。"},
+    {"id":"plan-2026-08-25-2","title":"检查 2 个真实岗位","category":"Applications","date":"2026-08-25","opportunity":"Medium","readiness":"Ready","effort":15,"note":"步骤：确认岗位是否开放、城市、截止日期和作品要求。｜完成标准：Tracker 更新 2 条真实岗位及链接。"},
+
+    {"id":"plan-2026-08-26-0","title":"完成 Portfolio 第 1 页","category":"Portfolio","date":"2026-08-26","opportunity":"High","readiness":"Partial","effort":70,"note":"步骤：放入项目标题、一句话定位、主视觉、个人角色、时间和工具。｜完成标准：导出一张可发送页面，缩小至 50% 仍能读懂标题和主图。"},
+    {"id":"plan-2026-08-26-1","title":"分析 1 个高匹配 JD","category":"Applications","date":"2026-08-26","opportunity":"High","readiness":"Ready","effort":35,"note":"步骤：提取职责、软件、作品要求各 3 项，并标记已有证据和缺口。｜完成标准：岗位备注写清要求、证据、缺口和截止日期。"},
+    {"id":"plan-2026-08-26-2","title":"更新今日进度","category":"Planning","date":"2026-08-26","opportunity":"Medium","readiness":"Ready","effort":15,"note":"步骤：保存页面版本，更新 Portfolio 和岗位 Tracker，写下明天第一步。｜完成标准：文件带日期，两个 Tracker 均已更新。"},
+
+    {"id":"plan-2026-08-27-0","title":"完成 Portfolio 第 2 页","category":"Portfolio","date":"2026-08-27","opportunity":"High","readiness":"Partial","effort":70,"note":"步骤：选择 2–4 张过程图，用 Problem / Process / Contribution 组织文字并统一图注。｜完成标准：页面可独立说明设计过程和个人贡献。"},
+    {"id":"plan-2026-08-27-1","title":"录入另外 5 家目标公司","category":"Applications","date":"2026-08-27","opportunity":"Medium","readiness":"Ready","effort":35,"note":"步骤：寻找 Spatial 2 家、Visualization 1 家、Game/Creative 2 家。｜完成标准：Tracker 累计至少 10 家目标公司。"},
+    {"id":"plan-2026-08-27-2","title":"应用一项版式改进","category":"Portfolio","date":"2026-08-27","opportunity":"Medium","readiness":"Ready","effort":15,"note":"步骤：检查优秀作品集，选择一项字体、留白或图注做法并修改。｜完成标准：保存 before/after 截图。"},
+
+    {"id":"plan-2026-08-28-0","title":"完成 LinkedIn 基础更新","category":"Planning","date":"2026-08-28","opportunity":"High","readiness":"Partial","effort":60,"note":"步骤：统一职业标题，写 80–120 词 About，补齐 UCLA、Agence TER 和核心技能。｜完成标准：核心栏目无空白，定位与简历一致。"},
+    {"id":"plan-2026-08-28-1","title":"准备第 1 个高匹配申请","category":"Applications","date":"2026-08-28","opportunity":"High","readiness":"Partial","effort":40,"note":"步骤：确认岗位开放，将 5 个 JD 关键词自然写入简历，选择最匹配作品集。｜完成标准：材料齐全，只剩最终检查和提交。"},
+    {"id":"plan-2026-08-28-2","title":"联系 1 位 UCLA 校友","category":"Networking","date":"2026-08-28","opportunity":"Medium","readiness":"Ready","effort":20,"note":"步骤：阅读对方经历，发送 60–90 词定制消息。｜完成标准：消息已发送，Tracker 记录 7 天后跟进。"},
+
+    {"id":"plan-2026-08-29-0","title":"完成 Portfolio 两页深度修改","category":"Portfolio","date":"2026-08-29","opportunity":"High","readiness":"Partial","effort":110,"note":"步骤：分两个 50 分钟区块改善主视觉、叙事、字体、图注和边距，中间休息 10 分钟。｜完成标准：两页达到可发送状态并导出 PDF。"},
+    {"id":"plan-2026-08-29-1","title":"提交第 1 个高匹配申请","category":"Applications","date":"2026-08-29","opportunity":"High","readiness":"Ready","effort":40,"note":"步骤：最终检查岗位状态、简历文件名、作品链接和联系方式后提交。｜完成标准：收到提交确认，Tracker 状态改为已投递。"},
+    {"id":"plan-2026-08-29-2","title":"整理本周成果","category":"Planning","date":"2026-08-29","opportunity":"Medium","readiness":"Ready","effort":20,"note":"步骤：归档简历 PDF、作品页、JD 和提交确认。｜完成标准：所有文件带日期且可以打开。"},
+
+    {"id":"plan-2026-08-30-0","title":"完成一周质量复盘","category":"Planning","date":"2026-08-30","opportunity":"High","readiness":"Ready","effort":40,"note":"步骤：统计完成的简历模块、作品页、目标公司、申请和联系人，记录卡点。｜完成标准：写出 3 个有效结果、1 个瓶颈和 1 个改进。"},
+    {"id":"plan-2026-08-30-1","title":"获得一次作品集反馈","category":"Portfolio","date":"2026-08-30","opportunity":"High","readiness":"Partial","effort":40,"note":"步骤：将当前 PDF 发给一位同学、导师或从业者，只询问定位是否清楚和最弱页面。｜完成标准：记录至少 2 条具体反馈。"},
+    {"id":"plan-2026-08-30-2","title":"安排下周五个时间块","category":"Planning","date":"2026-08-30","opportunity":"Medium","readiness":"Ready","effort":20,"note":"步骤：根据最大瓶颈安排五个两小时以内的求职时段。｜完成标准：日历已有 5 个时间块及各自交付物。"}
+  ]
+}
