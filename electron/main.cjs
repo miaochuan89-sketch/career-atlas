@@ -65,18 +65,20 @@ function resumeLayout(r) {
   if(score<3450)return {mode:'compact',margin:.34,font:9,line:1.09,section:4.5,group:3.5,name:16,heading:10.5};
   return {mode:'dense',margin:.28,font:8,line:1.03,section:3,group:2.5,name:15,heading:9.5};
 }
-function resumeHtml(r) {
+function paperSpec(paper='Letter') { return paper === 'A4' ? {name:'A4',width:8.2677,height:11.6929,twips:[11906,16838]} : {name:'Letter',width:8.5,height:11,twips:[12240,15840]}; }
+function resumeHtml(r, paper='Letter') {
   const contact = [r.location, r.phone, r.email, r.linkedin, r.portfolio].filter(Boolean).map(htmlEscape).join('  |  ');
-  const layout=resumeLayout(r), sections=resumeSections(r);
-  return `<!doctype html><html><head><meta charset="utf-8"><style>@page{size:Letter;margin:${layout.margin}in .48in}*{box-sizing:border-box}html,body{margin:0}body{font-family:"Times New Roman",Times,serif;color:#222;font-size:${layout.font}pt;line-height:${layout.line}}@media screen{html{width:8.5in;min-height:11in;background:#fff}body{width:8.5in;min-height:11in;padding:${layout.margin}in .48in}}header{text-align:center;margin:0 0 ${layout.section}px}h1{font-size:${layout.name}pt;margin:0 0 3px;line-height:1.05}header .contact{font-size:${Math.max(7.5,layout.font-.5)}pt}main.spacious{min-height:9.35in;display:flex;flex-direction:column;justify-content:space-around}section{margin-top:${layout.section}px;break-inside:avoid}h2{font-size:${layout.heading}pt;line-height:1;border-bottom:.35pt solid #333;margin:0 0 3px;padding-bottom:2px}.group{margin:0 0 ${layout.group}px}.entry{display:flex;justify-content:space-between;gap:14px;margin:0}.entry span:last-child{text-align:right;white-space:nowrap}.entry.primary{font-weight:700}.entry.secondary{font-style:italic}.bullet{padding-left:10px;text-indent:-7px;margin:${layout.mode==='dense'?0:1.5}px 0}</style></head><body><header><h1>${htmlEscape(r.fullName || 'YOUR NAME')}</h1><div class="contact">${contact}</div></header><main class="${layout.mode}">${sections.map(s=>resumeSection(s.title,s.content)).join('')}</main></body></html>`;
+  const layout=resumeLayout(r), sections=resumeSections(r), page=paperSpec(paper);
+  return `<!doctype html><html><head><meta charset="utf-8"><style>@page{size:${page.name};margin:${layout.margin}in .48in}*{box-sizing:border-box}html,body{margin:0}body{font-family:"Times New Roman",Times,serif;color:#222;font-size:${layout.font}pt;line-height:${layout.line}}@media screen{html{width:${page.width}in;min-height:${page.height}in;background:#fff}body{width:${page.width}in;min-height:${page.height}in;padding:${layout.margin}in .48in}}header{text-align:center;margin:0 0 ${layout.section}px}h1{font-size:${layout.name}pt;margin:0 0 3px;line-height:1.05}header .contact{font-size:${Math.max(7.5,layout.font-.5)}pt}main.spacious{min-height:${page.height-layout.margin*2-.7}in;display:flex;flex-direction:column;justify-content:space-around}section{margin-top:${layout.section}px;break-inside:avoid}h2{font-size:${layout.heading}pt;line-height:1;border-bottom:.35pt solid #333;margin:0 0 3px;padding-bottom:2px}.group{margin:0 0 ${layout.group}px}.entry{display:flex;justify-content:space-between;gap:14px;margin:0}.entry span:last-child{text-align:right;white-space:nowrap}.entry.primary{font-weight:700}.entry.secondary{font-style:italic}.bullet{padding-left:10px;text-indent:-7px;margin:${layout.mode==='dense'?0:1.5}px 0}</style></head><body><header><h1>${htmlEscape(r.fullName || 'YOUR NAME')}</h1><div class="contact">${contact}</div></header><main class="${layout.mode}">${sections.map(s=>resumeSection(s.title,s.content)).join('')}</main></body></html>`;
 }
 function rtfEscape(value) {
   return String(value || '').replace(/[\\{}]/g, '\\$&').replace(/\r?\n/g, '\\line ').replace(/[^\x00-\x7F]/g, c => { const n=c.charCodeAt(0); return `\\u${n>32767?n-65536:n}?`; });
 }
-function resumeRtf(r) {
+function resumeRtf(r, paper='Letter') {
   const sections = resumeSections(r), layout=resumeLayout(r), fs=Math.round(layout.font*2), heading=Math.round(layout.heading*2), name=Math.round(layout.name*2), margin=Math.round(layout.margin*1440), line=Math.round(layout.font*layout.line*24);
+  const page=paperSpec(paper);
   const contact=[r.location,r.phone,r.email,r.linkedin,r.portfolio].filter(Boolean).join('  |  ');
-  return `{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Times New Roman;}}\\paperw12240\\paperh15840\\margl691\\margr691\\margt${margin}\\margb${margin}\\fs${fs}\\sl${line}\\slmult1\\qc\\b\\fs${name} ${rtfEscape(r.fullName||'YOUR NAME')}\\b0\\fs${Math.max(15,fs-1)}\\line ${rtfEscape(contact)}\\par\\ql ${sections.map(({title,content})=>`${String(title||'').trim()?`\\sb${Math.round(layout.section*20)}\\sa30\\b\\fs${heading} ${rtfEscape(title)}\\b0\\fs${fs}\\brdrb\\brdrs\\brdrw5\\par`:''}\\sb25\\brdrnone ${rtfEscape(content)}\\par`).join('')}}`;
+  return `{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Times New Roman;}}\\paperw${page.twips[0]}\\paperh${page.twips[1]}\\margl691\\margr691\\margt${margin}\\margb${margin}\\fs${fs}\\sl${line}\\slmult1\\qc\\b\\fs${name} ${rtfEscape(r.fullName||'YOUR NAME')}\\b0\\fs${Math.max(15,fs-1)}\\line ${rtfEscape(contact)}\\par\\ql ${sections.map(({title,content})=>`${String(title||'').trim()?`\\sb${Math.round(layout.section*20)}\\sa30\\b\\fs${heading} ${rtfEscape(title)}\\b0\\fs${fs}\\brdrb\\brdrs\\brdrw5\\par`:''}\\sb25\\brdrnone ${rtfEscape(content)}\\par`).join('')}}`;
 }
 async function loadPrintableHtml(win, html) {
   await win.loadFile(path.join(__dirname, '..', 'src', 'index.html'));
@@ -110,22 +112,24 @@ ipcMain.handle('open-external', async (_event, url) => {
   await shell.openExternal(url);
   return true;
 });
-ipcMain.handle('export-resume-pdf', async (_event, resume) => {
+ipcMain.handle('export-resume-pdf', async (_event, payload) => {
+  const resume=payload.resume||payload, paper=payload.paper||resume.paperSize||'Letter';
   const result = await dialog.showSaveDialog({ defaultPath: `${safeFileName(resume.versionName)}.pdf`, filters: [{ name: 'PDF', extensions: ['pdf'] }] });
   if (result.canceled || !result.filePath) return { canceled: true };
   const win = new BrowserWindow({ show: false, webPreferences: { sandbox: true } });
-  await loadPrintableHtml(win, resumeHtml(resume));
-  const pdf = await win.webContents.printToPDF({ pageSize: 'Letter', printBackground: true, margins: { top: 0, bottom: 0, left: 0, right: 0 } });
+  await loadPrintableHtml(win, resumeHtml(resume, paper));
+  const pdf = await win.webContents.printToPDF({ pageSize: paper === 'A4' ? 'A4' : 'Letter', printBackground: true, margins: { top: 0, bottom: 0, left: 0, right: 0 } });
   fs.writeFileSync(result.filePath, pdf); win.destroy();
   return { canceled: false, path: result.filePath };
 });
-ipcMain.handle('export-resume-word', async (_event, resume) => {
+ipcMain.handle('export-resume-word', async (_event, payload) => {
+  const resume=payload.resume||payload, paper=payload.paper||resume.paperSize||'Letter';
   const result = await dialog.showSaveDialog({ defaultPath: `${safeFileName(resume.versionName)}.rtf`, filters: [{ name: 'Microsoft Word compatible', extensions: ['rtf'] }] });
   if (result.canceled || !result.filePath) return { canceled: true };
-  fs.writeFileSync(result.filePath, resumeRtf(resume), 'utf8');
+  fs.writeFileSync(result.filePath, resumeRtf(resume, paper), 'utf8');
   return { canceled: false, path: result.filePath };
 });
-ipcMain.handle('render-resume-preview', (_event, resume) => resumeHtml(resume));
+ipcMain.handle('render-resume-preview', (_event, { resume, paper='Letter' }) => resumeHtml(resume, paper));
 ipcMain.handle('check-update', async () => {
   try {
     const release = await latestRelease();
