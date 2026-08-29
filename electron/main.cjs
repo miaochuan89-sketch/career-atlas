@@ -126,24 +126,6 @@ ipcMain.handle('open-external', async (_event, url) => {
   await shell.openExternal(url);
   return true;
 });
-ipcMain.handle('export-resume-pdf', async (_event, payload) => {
-  const resume=payload.resume||payload, paper=payload.paper||resume.paperSize||'Letter';
-  const result = await dialog.showSaveDialog({ defaultPath: `${safeFileName(resume.versionName)}.pdf`, filters: [{ name: 'PDF', extensions: ['pdf'] }] });
-  if (result.canceled || !result.filePath) return { canceled: true };
-  const win = new BrowserWindow({ show: false, webPreferences: { sandbox: true } });
-  await loadPrintableHtml(win, resumeHtml(resume, paper));
-  const pdf = await win.webContents.printToPDF({ pageSize: paper === 'A4' ? 'A4' : 'Letter', printBackground: true, margins: { top: 0, bottom: 0, left: 0, right: 0 } });
-  fs.writeFileSync(result.filePath, pdf); win.destroy();
-  return { canceled: false, path: result.filePath };
-});
-ipcMain.handle('export-resume-word', async (_event, payload) => {
-  const resume=payload.resume||payload, paper=payload.paper||resume.paperSize||'Letter';
-  const result = await dialog.showSaveDialog({ defaultPath: `${safeFileName(resume.versionName)}.rtf`, filters: [{ name: 'Microsoft Word compatible', extensions: ['rtf'] }] });
-  if (result.canceled || !result.filePath) return { canceled: true };
-  fs.writeFileSync(result.filePath, resumeRtf(resume, paper), 'utf8');
-  return { canceled: false, path: result.filePath };
-});
-ipcMain.handle('render-resume-preview', (_event, { resume, paper='Letter' }) => resumeHtml(resume, paper));
 ipcMain.handle('check-update', async () => {
   try {
     const release = await latestRelease();
