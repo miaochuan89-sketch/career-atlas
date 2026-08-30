@@ -1,6 +1,6 @@
 {
   "name": "career-atlas",
-  "version": "1.18.0",
+  "version": "1.18.1",
   "description": "A personal job search management app designed by Miaochuan Fan",
   "main": "electron/main.cjs",
   "author": "Career Atlas",
