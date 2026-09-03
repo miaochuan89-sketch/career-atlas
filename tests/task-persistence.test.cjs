@@ -21,4 +21,7 @@ vm.runInNewContext(`const STORAGE_KEY='career-atlas-v1';${loadSource};globalThis
 assert.deepEqual(JSON.parse(JSON.stringify(context.result)), imported);
 assert.match(source, /⇩ 导入计划/);
 assert.match(source, /⇧ 导出计划/);
+assert.match(source, /taskDateFilter=df\.value;taskCategoryFilter=tf\.value/);
+assert.match(source, /visibleTasks\(taskDateFilter,taskCategoryFilter\)/);
+assert.match(source, /plan\.recommendedImportMode==='replace'/);
 console.log('Imported tasks persist across restart and arrows are correct.');
